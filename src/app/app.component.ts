@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
+import { CountriesService } from './services/countries.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'projeto-reactive-forms-2';
+
+  private readonly _countriesService = inject(CountriesService);
+
+  readonly countries$ = this._countriesService.countrys$;
+
+  constructor() {
+    effect(() => {
+      console.log('Países atualizados:', this.countries$());
+    });
+  }
 }
