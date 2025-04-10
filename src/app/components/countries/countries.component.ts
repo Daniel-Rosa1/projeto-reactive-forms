@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CountriesService } from '../../services/countries.service';
+import { CountriesService } from '../../services/contries/countries.service';
 import { CountrieList } from '../../types/countrie-list';
 
 @Component({
