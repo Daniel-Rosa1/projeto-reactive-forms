@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { ICountrieResponse } from '../../interfaces/countrie-response/countrie-response.interface';
+import { map } from 'rxjs';
 import { IStatesResponse } from '../../interfaces/states-response/states-response.interface';
-import { IStateResponseData } from '../../interfaces/states-response/state-response-data.interface';
 import { StateList } from '../../types/state-list';
 
 
@@ -15,11 +13,16 @@ export class StatesService {
   private readonly _apiUrl = 'https://countriesnow.space/api/v0.1/countries/states';
 
   readonly _states = signal<StateList>([]);
+  readonly _statesLoading = signal<boolean>(false);
+
   readonly states$ = this._states.asReadonly();
+  readonly statesLoading$ = this._statesLoading.asReadonly();
 
   constructor() { }
 
   getStates(countryName: string) {
+    this._statesLoading.set(true);
+
     return this._httpClient.post<IStatesResponse>(this._apiUrl, {
       country: countryName
     })
@@ -27,8 +30,15 @@ export class StatesService {
       map((statesResponse) => {
         return statesResponse.data.states;
       })
-    ).subscribe((data) => {
-      this._states.set(data);
+    ).subscribe({
+      next: (data) => {
+        this._states.set(data);
+        this._statesLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar estados:', error);
+        this._statesLoading.set(false);
+      }
     });
   }
 }

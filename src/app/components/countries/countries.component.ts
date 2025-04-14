@@ -8,7 +8,7 @@ import { CountrieList } from '../../types/countrie-list';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div *ngIf="countries() as countriesList">
+    <div *ngIf="countries$() as countriesList">
       <ul>
         <li *ngFor="let country of countriesList">
           {{ country.name }} - {{ country.iso2 }}
@@ -19,5 +19,5 @@ import { CountrieList } from '../../types/countrie-list';
 })
 export class CountriesComponent {
   private readonly _countriesService = inject(CountriesService);
-  readonly countries = this._countriesService.countries;
+  readonly countries$ = this._countriesService.countrys$;
 }
